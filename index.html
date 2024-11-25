@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue start</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div
+      id="app"
+      class="app container w-full mx-auto text-center w-full h-screen flex items-center justify-center"
+    >
+      <div
+        class="bg-white rounded-lg mt-5 shadow sm:w-full sm:w-3/4 sm:mx-auto sm:overflow-hidden"
+      >
+        <form class="px-4 py-8 sm:px-10" v-on:submit="addProduct">
+          <div class="relative mt-6">
+            <div class="absolute inset-0 flex items-center">
+              <div class="w-full border-t border-gray-300"></div>
+            </div>
+            <div class="relative flex justify-center text-sm leading-5">
+              <span class="px-2 text-gray-500 bg-white"> {{titleCard}} </span>
+            </div>
+          </div>
+          <div class="mt-6">
+            <div class="w-full space-y-6">
+              <div class="w-full">
+                <div class="relative">
+                  <input
+                    v-model="fieldTitle"
+                    type="text"
+                    id="field-title"
+                    class="rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                    placeholder="Your product"
+                  />
+                </div>
+              </div>
+              <div class="w-full">
+                <div class="relative">
+                  <input
+                    v-model="fieldPrice"
+                    type="text"
+                    id="field-price"
+                    class="rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                    placeholder="Your price"
+                  />
+                </div>
+              </div>
+              <div class="w-full">
+                <div class="relative">
+                  <input
+                    v-model="fieldCounter"
+                    type="text"
+                    id="field-count"
+                    class="rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                    placeholder="Your count"
+                  />
+                </div>
+              </div>
+              <div>
+                <span class="block w-full rounded-md shadow-sm">
+                  <button
+                    type="submit"
+                    class="py-2 px-4 bg-gradient-to-r from-cyan-500 to-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
+                  >
+                    Added product
+                  </button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="px-4 py-6 border-t-2 border-gray-200 bg-gray-50 sm:px-10">
+          <table class="table p-4 bg-white rounded-lg shadow w-full">
+            <thead>
+              <tr>
+                <th
+                  class="border-b-2 p-4 dark:border-dark-5 whitespace-nowrap font-normal text-gray-900"
+                >
+                  {{titleTable.id}}
+                </th>
+                <th
+                  class="border-b-2 p-4 dark:border-dark-5 whitespace-nowrap font-normal text-gray-900"
+                >
+                  {{titleTable.Title}}
+                </th>
+                <th
+                  class="border-b-2 p-4 dark:border-dark-5 whitespace-nowrap font-normal text-gray-900"
+                >
+                  {{titleTable.Price}}
+                </th>
+                <th
+                  class="border-b-2 p-4 dark:border-dark-5 whitespace-nowrap font-normal text-gray-900"
+                >
+                  {{titleTable.Count}}
+                </th>
+              </tr>
+            </thead>
+            <transition-group name="listProduct" tag="tbody">
+              <tr
+                v-for="order in sortedProducts"
+                :key="order.id"
+                class="text-gray-700 relative"
+              >
+                <td class="border-b-2 p-4 dark:border-dark-5">
+                  {{ order.id }}
+                </td>
+                <td class="border-b-2 p-4 dark:border-dark-5">
+                  {{ order.title }}
+                </td>
+                <td class="border-b-2 p-4 dark:border-dark-5">
+                  {{ order.price }}
+                </td>
+                <td class="border-b-2 p-4 dark:border-dark-5">
+                  {{ order.count }}
+                </td>
+                <td
+                  class="p-4 absolute cursor-pointer transition ease-in duration-200 rounded-lg hover:scale-110 active:scale-90"
+                  style="right: -53px"
+                  @click="deleteProduct(order.id)"
+                >
+                  <img :src="order.deleteProduct" alt="Delete Product" />
+                </td>
+              </tr>
+            </transition-group>
+
+            <tfoot>
+              <tr
+                class="bg-gradient-to-r from-cyan-500 to-green-500 rounded-lg overflow-hidden"
+                v-if="totalPrice > 0"
+              >
+                <td
+                  class="p-4 dark:border-dark-5 whitespace-nowrap font-semibold text-black-700"
+                >
+                  Sum
+                </td>
+                <td
+                  class="p-4 dark:border-dark-5 whitespace-nowrap font-normal"
+                ></td>
+                <td
+                  class="p-4 dark:border-dark-5 whitespace-nowrap font-normal"
+                ></td>
+                <td
+                  class="p-4 dark:border-dark-5 whitespace-nowrap font-semibold text-black-700"
+                >
+                  {{totalPrice}}
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/app.js"></script>
+  </body>
+  <script></script>
+</html>
